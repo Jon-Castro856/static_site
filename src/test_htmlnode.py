@@ -11,6 +11,11 @@ class TestHTMLNode(unittest.TestCase):
         node = HTMLNode(tag="w", value="x", children=[], props={})
         with self.assertRaises(NotImplementedError):
             node.to_html()
+    
+    def test_eq(self):
+        node1 = HTMLNode(tag="h1", value="text", children=[], props={"Target:" "blank"})
+        node2 = HTMLNode(tag="h1", value="text", children=[], props={"Target:" "blank"})
+        self.assertEqual(node1, node2)
 
     
 
