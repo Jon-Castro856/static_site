@@ -38,11 +38,34 @@ class LeafNode(HTMLNode):
         if self.tag is None:
             return f"{self.value}"
         if self.props:
-             formatted_props = [f' {key}="{value}"' for key, value in self.props.items()]
-             link = "".join(formatted_props)
+             formatted_props = self.props_to_html()
+             link = " " + "".join(formatted_props)
                    
         return f'<{self.tag}{link}>{self.value}</{self.tag}>'
     
 class ParentNode(HTMLNode):
     def __init__(self, tag, value, children, props=None):
         super().__init__(tag, None, children, props)
+
+    def to_html(self):
+         link=""
+         if self.tag is None:
+             raise ValueError("tag must have a value")
+         if self.children is None:
+             raise ValueError("ParentNode must have children")
+         for child in self.children:
+             if child.value is None:
+                 raise ValueError("child has no value")
+         
+         if self.props:
+             formatted_props = self.props_to_html()
+             link = "".join(formatted_props)
+
+         child_values ="".join(list((map(lambda x: x.to_html(), self.children))))
+         return f'<{self.tag} {link}>{child_values}</{self.tag}>'
+
+        
+             
+        
+             
+    
