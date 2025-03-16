@@ -1,3 +1,4 @@
+from textnode import *
 class HTMLNode:
     def __init__(self, tag=None, value=None, children=None, props=None):
         self.tag = tag
@@ -60,6 +61,23 @@ class ParentNode(HTMLNode):
 
          child_values ="".join(list(map(lambda x: x.to_html(), self.children)))
          return f'<{self.tag}{link}>{child_values}</{self.tag}>'
+    
+def text_node_to_html_node(text_node):
+    match text_node.text_type:
+        case (TextType.TEXT):
+            return LeafNode(None, text_node.text)
+        case (TextType.BOLD):
+            return LeafNode("b", text_node.text)
+        case (TextType.ITALIC):
+            return LeafNode("i", text_node.text)
+        case (TextType.CODE):
+            return LeafNode("code", text_node.text)
+        case (TextType.LINK):
+            return LeafNode("a", text_node.text, props={"href": text_node.url})
+        case (TextType.IMAGE):
+            return LeafNode("img", "", props={"src": text_node.url, "alt": text_node.text})
+        case _:
+            raise ValueError("TextNode Object has no type or incorrect type")
 
         
              

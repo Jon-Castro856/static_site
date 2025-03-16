@@ -1,10 +1,9 @@
 from enum import Enum
-from htmlnode import *
 
 class TextType(Enum):
+    TEXT = "text"
     BOLD = "bold"
     ITALIC = "italic"
-    CODE_TEXT = "code"
     LINK = "link"
     IMAGE = "image"
     CODE = "code"
