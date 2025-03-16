@@ -21,7 +21,7 @@ class HTMLNode:
             return ""
         props_html = ""
         for prop in self.props:
-            props_html += f'{prop}="{self.props[prop]}"'
+            props_html += f' {prop}="{self.props[prop]}"'
         return props_html
     
     def __repr__(self):
@@ -39,12 +39,12 @@ class LeafNode(HTMLNode):
             return f"{self.value}"
         if self.props:
              formatted_props = self.props_to_html()
-             link = " " + "".join(formatted_props)
+             link = "".join(formatted_props)
                    
         return f'<{self.tag}{link}>{self.value}</{self.tag}>'
     
 class ParentNode(HTMLNode):
-    def __init__(self, tag, value, children, props=None):
+    def __init__(self, tag, children, props=None):
         super().__init__(tag, None, children, props)
 
     def to_html(self):
@@ -53,16 +53,13 @@ class ParentNode(HTMLNode):
              raise ValueError("tag must have a value")
          if self.children is None:
              raise ValueError("ParentNode must have children")
-         for child in self.children:
-             if child.value is None:
-                 raise ValueError("child has no value")
-         
+      
          if self.props:
              formatted_props = self.props_to_html()
              link = "".join(formatted_props)
 
-         child_values ="".join(list((map(lambda x: x.to_html(), self.children))))
-         return f'<{self.tag} {link}>{child_values}</{self.tag}>'
+         child_values ="".join(list(map(lambda x: x.to_html(), self.children)))
+         return f'<{self.tag}{link}>{child_values}</{self.tag}>'
 
         
              

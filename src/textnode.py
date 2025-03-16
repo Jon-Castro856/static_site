@@ -1,4 +1,5 @@
 from enum import Enum
+from htmlnode import *
 
 class TextType(Enum):
     BOLD = "bold"
@@ -6,6 +7,7 @@ class TextType(Enum):
     CODE_TEXT = "code"
     LINK = "link"
     IMAGE = "image"
+    CODE = "code"
 
 class TextNode:
     def __init__(self, text, text_type, url=None):
