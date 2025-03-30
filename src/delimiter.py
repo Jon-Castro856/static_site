@@ -93,3 +93,21 @@ def text_to_textnode(text):
         "_", TextType.ITALIC),
     "**", TextType.BOLD)
     return parsed_nodes
+
+def markdown_to_blocks(markdown):
+    blocks = markdown.split("\n\n")
+    filtered_blocks = []
+    for block in blocks:
+        if block == "":
+            continue
+        block = block.strip()
+        filtered_blocks.append(block)
+    return filtered_blocks
+"""
+        if "\n" in line:
+            newsplit = line.split("\n")
+            stripped = list(map(lambda x: x.strip(), newsplit))
+            joined = "\n".join(stripped).rstrip("\n").lstrip("\n")
+            new_list.append(joined)
+            continue"
+        """
