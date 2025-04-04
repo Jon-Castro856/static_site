@@ -103,11 +103,3 @@ def markdown_to_blocks(markdown):
         block = block.strip()
         filtered_blocks.append(block)
     return filtered_blocks
-"""
-        if "\n" in line:
-            newsplit = line.split("\n")
-            stripped = list(map(lambda x: x.strip(), newsplit))
-            joined = "\n".join(stripped).rstrip("\n").lstrip("\n")
-            new_list.append(joined)
-            continue"
-        """

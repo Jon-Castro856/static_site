@@ -1,6 +1,7 @@
 import unittest
 from textnode import TextNode, TextType
 from delimiter import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnode, markdown_to_blocks
+from blocktype import block_to_block_type, BlockType
 
 class TestHTMLNode(unittest.TestCase):
     def test_functionality(self):
@@ -196,6 +197,21 @@ This is the same paragraph on a new line
             "- This is a list\n- with items",
             ],
             )
+
+    def test_blocktypes(self):
+        print("did i add this test correctly")
+        block = "# heading"
+        self.assertEqual(block_to_block_type(block), BlockType.HEAD)
+        block = "```\ncode\n```"
+        self.assertEqual(block_to_block_type(block), BlockType.CODE)
+        block = "> quote\n> more quote"
+        self.assertEqual(block_to_block_type(block), BlockType.QUOTE)
+        block = "- list\n- items"
+        self.assertEqual(block_to_block_type(block), BlockType.U_LIST)
+        block = "1. list\n2. items"
+        self.assertEqual(block_to_block_type(block), BlockType.O_LIST)
+        block = "paragraph"
+        self.assertEqual(block_to_block_type(block), BlockType.PARA)
 
 if __name__ == "__main__":
     unittest.main()
