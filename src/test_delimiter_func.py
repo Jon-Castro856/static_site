@@ -1,7 +1,8 @@
 import unittest
 from textnode import TextNode, TextType
+from htmlnode import HTMLNode, LeafNode, ParentNode
 from delimiter import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnode, markdown_to_blocks
-from blocktype import block_to_block_type, BlockType
+from blocktype import block_to_block_type, BlockType, markdown_to_html_node
 
 class TestHTMLNode(unittest.TestCase):
     def test_functionality(self):
@@ -199,7 +200,6 @@ This is the same paragraph on a new line
             )
 
     def test_blocktypes(self):
-        print("did i add this test correctly")
         block = "# heading"
         self.assertEqual(block_to_block_type(block), BlockType.HEAD)
         block = "```\ncode\n```"
@@ -213,5 +213,58 @@ This is the same paragraph on a new line
         block = "paragraph"
         self.assertEqual(block_to_block_type(block), BlockType.PARA)
 
+    def test_markdown_to_html(self):
+        md = """
+        This is a paragraph text more text even more
+
+        Separate paragraph now
+
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html,
+                         "<div><p>This is a paragraph text more text even more</p><p>Separate paragraph now</p></div>")
+        
+    def test_markdown_html_with_inlines(self):
+        md = """
+        This is a paragraph with **bold text** and _italic_ text
+
+        Second paragraph with `code` text
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html, "<div><p>This is a paragraph with <b>bold text</b> and <i>italic</i> text</p><p>Second paragraph with <code>code</code> text</p></div>")
+    
+    def test_markdown_html_heading(self):
+        md = """
+        # Top Heading
+
+        ### Middle Heading
+
+        ###### Lower Heading
+
+        Paragraph Text
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html, "<div><h1>Top Heading</h1><h3>Middle Heading</h3><h6>Lower Heading</h6><p>Paragraph Text</p></div>")
+    def test_markdown_html_ulist(self):
+        md = """
+        - Start of unordered list
+- second item
+- third item with **bold formatting** wow
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html, "<div><ul><li>Start of unordered list</li><li>second item</li><li>third item with <b>bold formatting</b> wow</li></ul></div>")
+    def test_markdown_html_olist(self):
+        md = """
+        1. Start of ordered list
+2. second item
+3. third item with _italic formatting_ so cool
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(html, "<div><ol><li>Start of ordered list</li><li>second item</li><li>third item with <i>italic formatting</i> so cool</li></ol></div>")
 if __name__ == "__main__":
     unittest.main()

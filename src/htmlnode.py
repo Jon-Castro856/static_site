@@ -30,7 +30,7 @@ class HTMLNode:
 
 class LeafNode(HTMLNode):
     def __init__(self, tag, value, props=None):
-        super().__init__(tag, value, {}, props)
+        super().__init__(tag, value, [], props)
 
     def to_html(self):
         link = ""
@@ -49,18 +49,19 @@ class ParentNode(HTMLNode):
         super().__init__(tag, None, children, props)
 
     def to_html(self):
-         link=""
-         if self.tag is None:
-             raise ValueError("tag must have a value")
-         if self.children is None:
-             raise ValueError("ParentNode must have children")
+        link=""
+        if self.tag is None:
+            raise ValueError("tag must have a value")
+        if self.children is None:
+            raise ValueError("ParentNode must have children")
       
-         if self.props:
-             formatted_props = self.props_to_html()
-             link = "".join(formatted_props)
-
-         child_values ="".join(list(map(lambda x: x.to_html(), self.children)))
-         return f'<{self.tag}{link}>{child_values}</{self.tag}>'
+        if self.props:
+            formatted_props = self.props_to_html()
+            link = "".join(formatted_props)
+        child_values = ""
+        for child in self.children:
+            child_values += child.to_html()
+        return f'<{self.tag}{link}>{child_values}</{self.tag}>'
     
 def text_node_to_html_node(text_node):
     match text_node.text_type:
@@ -78,9 +79,3 @@ def text_node_to_html_node(text_node):
             return LeafNode("img", "", props={"src": text_node.url, "alt": text_node.text})
         case _:
             raise ValueError("TextNode Object has no type or incorrect type")
-
-        
-             
-        
-             
-    
