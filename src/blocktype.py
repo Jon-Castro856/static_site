@@ -1,6 +1,7 @@
 from enum import Enum
 from delimiter import markdown_to_blocks, text_to_textnode
 from htmlnode import HTMLNode, LeafNode, ParentNode, text_node_to_html_node
+from textnode import TextNode, TextType
 
 class BlockType(Enum):
     PARA = "paragraph"
@@ -44,10 +45,16 @@ def markdown_to_html_node(markdown):
             continue
         match block_to_block_type(block):
             case(BlockType.CODE):
-                pass
+                stripped = block.lstrip("```").rstrip("```").strip()
+                text = TextNode(stripped+"\n", TextType.CODE)
+                node = text_node_to_html_node(text)
+                code_node = ParentNode("pre", [node])
+
+                parent.children.append(code_node)
             case(BlockType.QUOTE):
                 new_node = ParentNode("blockquote", [])
-                children = text_to_children(block)
+                stripped = block.lstrip(">")
+                children = text_to_children(stripped)
                 new_node.children = children
                 parent.children.append(new_node)
             case(BlockType.HEAD):

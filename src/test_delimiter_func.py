@@ -266,5 +266,17 @@ This is the same paragraph on a new line
         node = markdown_to_html_node(md)
         html = node.to_html()
         self.assertEqual(html, "<div><ol><li>Start of ordered list</li><li>second item</li><li>third item with <i>italic formatting</i> so cool</li></ol></div>")
+
+    def test_markdown_to_html_code(self):
+        md = """
+        ```
+This is code represented as text.
+It should ignore _inline_ stuff
+        ```
+        """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        print(f"HTML is: {html}")
+        self.assertEqual(html, "<div><pre><code>This is code represented as text.\nIt should ignore _inline_ stuff\n</code></pre></div>")
 if __name__ == "__main__":
     unittest.main()
