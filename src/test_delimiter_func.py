@@ -3,6 +3,7 @@ from textnode import TextNode, TextType
 from htmlnode import HTMLNode, LeafNode, ParentNode
 from delimiter import split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnode, markdown_to_blocks
 from blocktype import block_to_block_type, BlockType, markdown_to_html_node
+from main import extract_title
 
 class TestHTMLNode(unittest.TestCase):
     def test_functionality(self):
@@ -276,7 +277,21 @@ It should ignore _inline_ stuff
         """
         node = markdown_to_html_node(md)
         html = node.to_html()
-        print(f"HTML is: {html}")
         self.assertEqual(html, "<div><pre><code>This is code represented as text.\nIt should ignore _inline_ stuff\n</code></pre></div>")
+
+    def test_extract_title(self):
+        md = "# This is heading"
+        node = extract_title(md)
+
+        self.assertEqual(node, "This is heading")
+
+        md2 = "This is not heading"
+        with self.assertRaises(Exception):
+            node = extract_title(md2)
+        
+        md3 = "# This is heading extra line"
+        node2 = extract_title(md3)
+        self.assertEqual(node2, "This is heading")
+
 if __name__ == "__main__":
     unittest.main()

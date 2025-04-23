@@ -53,8 +53,12 @@ def markdown_to_html_node(markdown):
                 parent.children.append(code_node)
             case(BlockType.QUOTE):
                 new_node = ParentNode("blockquote", [])
-                stripped = block.lstrip(">")
-                children = text_to_children(stripped)
+                lines = block.split("\n")
+                new_lines = []
+                for line in lines:
+                    new_lines.append(line.lstrip(">").strip())
+                content = " ".join(new_lines)
+                children = text_to_children(content)
                 new_node.children = children
                 parent.children.append(new_node)
             case(BlockType.HEAD):
