@@ -1,11 +1,11 @@
 import os
 import shutil
 import sys
-from blocktype import markdown_to_html_node 
+from blocktype import markdown_to_html_node
 def main():
     basepath = sys.argv[0] if len(sys.argv) > 1 else "/"
     static = "./static"
-    doc = "./docs"
+    doc = "home/jon/workspace/docs"
     content = "./content"
     template = "./template.html"
     del_directory(doc)
