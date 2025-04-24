@@ -2,13 +2,14 @@ import os
 import shutil
 from blocktype import markdown_to_html_node 
 def main():
-    base = os.getcwd()
-    static = base + "/static"
-    public = base + "/public"
-    content = base + "/content"
+    #base = os.getcwd()
+    static = "./static"
+    public = "./public"
+    content = "./content"
+    template = "./template.html"
     del_directory(public)
     copy_files(static, public)
-    generate_page(content, base, public)
+    generate_page(content, template, public)
 
 def del_directory(directory):
     print(f"Deleting contents of {directory}")
@@ -44,24 +45,31 @@ def extract_title(markdown):
     return stripped_head
 
 def generate_page(from_path, template_path, dest_path):
-    print(f"Beginning to read {from_path} to {dest_path} using {template_path}.")
-    print("Opening content and template files")
-    file = open(from_path + "/index.md", "r")
-    template = open(template_path + "/template.html", "r")
-    content = file.read()
-    temp_copy = template.read()
-    print("Extracting Header from content\n---")
-    heading = extract_title(content)
-    print(f"header is {heading}\n---")
-    print("converting content into html\n---")
-    html_content = markdown_to_html_node(content)
-    print(f"content succesfully converted\n---")
-    temp_copy = temp_copy.replace("{{ Title }}", heading).replace("{{ Content }}", html_content.to_html())
-    file.close()
-    template.close()
-    print("Creating new file for webpage")
-    webpage = open(dest_path + "/index.html", "w")
-    webpage.write(temp_copy)
-
-
+    print(f"Beginning to read from {from_path} to {dest_path} using {template_path}.")
+    for filename in os.listdir(from_path):
+        path = os.path.join(from_path, filename)
+        if os.path.isdir(path):
+            print(f"Opening {filename} folder")
+            new_start = path
+            new_dest = os.path.join(dest_path, filename)
+            os.mkdir(new_dest)
+            generate_page(new_start, template_path, new_dest)
+        elif os.path.isfile(path):
+            print("Opening content and template files")
+            file = open(from_path + "/index.md", "r")
+            template = open(template_path, "r")
+            content = file.read()
+            temp_copy = template.read()
+            print("Extracting Header from content\n---")
+            heading = extract_title(content)
+            print(f"header is {heading}\n---")
+            print("converting content into html\n---")
+            html_content = markdown_to_html_node(content)
+            print(f"content succesfully converted\n---")
+            temp_copy = temp_copy.replace("{{ Title }}", heading).replace("{{ Content }}", html_content.to_html())
+            file.close()
+            template.close()
+            print("Creating new file for webpage")
+            webpage = open(dest_path + "/index.html", "w")
+            webpage.write(temp_copy)
 main()
