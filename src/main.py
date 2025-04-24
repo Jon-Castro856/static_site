@@ -5,7 +5,7 @@ from blocktype import markdown_to_html_node
 def main():
     basepath = sys.argv[0] if len(sys.argv) > 1 else "/"
     static = "./static"
-    doc = "home/jon/workspace/docs"
+    doc = "./docs"
     content = "./content"
     template = "./template.html"
     del_directory(doc)
