@@ -3,7 +3,7 @@ import shutil
 import sys
 from blocktype import markdown_to_html_node
 def main():
-    basepath = sys.argv[0] if len(sys.argv) > 1 else "/"
+    basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
     print(f"base_path is: {basepath}")
     static = "./static"
     doc = "./docs"
