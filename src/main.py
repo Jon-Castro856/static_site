@@ -1,15 +1,16 @@
 import os
 import shutil
+import sys
 from blocktype import markdown_to_html_node 
 def main():
-    #base = os.getcwd()
+    basepath = sys.argv[0] if len(sys.argv) > 1 else "/"
     static = "./static"
-    public = "./public"
+    doc = "./docs"
     content = "./content"
     template = "./template.html"
-    del_directory(public)
-    copy_files(static, public)
-    generate_page(content, template, public)
+    del_directory(doc)
+    copy_files(static, doc)
+    generate_page(content, template, doc, basepath)
 
 def del_directory(directory):
     print(f"Deleting contents of {directory}")
@@ -44,7 +45,7 @@ def extract_title(markdown):
         raise Exception("No Heading")
     return stripped_head
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, base):
     print(f"Beginning to read from {from_path} to {dest_path} using {template_path}.")
     for filename in os.listdir(from_path):
         path = os.path.join(from_path, filename)
@@ -53,7 +54,7 @@ def generate_page(from_path, template_path, dest_path):
             new_start = path
             new_dest = os.path.join(dest_path, filename)
             os.mkdir(new_dest)
-            generate_page(new_start, template_path, new_dest)
+            generate_page(new_start, template_path, new_dest, base)
         elif os.path.isfile(path):
             print("Opening content and template files")
             file = open(from_path + "/index.md", "r")
@@ -67,6 +68,7 @@ def generate_page(from_path, template_path, dest_path):
             html_content = markdown_to_html_node(content)
             print(f"content succesfully converted\n---")
             temp_copy = temp_copy.replace("{{ Title }}", heading).replace("{{ Content }}", html_content.to_html())
+            temp_copy = temp_copy.replace("href=/", base).replace("src=/", base)
             file.close()
             template.close()
             print("Creating new file for webpage")
