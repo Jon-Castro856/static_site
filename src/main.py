@@ -68,7 +68,7 @@ def generate_page(from_path, template_path, dest_path, base):
             html_content = markdown_to_html_node(content)
             print(f"content succesfully converted\n---")
             temp_copy = temp_copy.replace("{{ Title }}", heading).replace("{{ Content }}", html_content.to_html())
-            temp_copy = temp_copy.replace("href=/", base).replace("src=/", base)
+            temp_copy = temp_copy.replace('href="/', base).replace('src="/', base)
             file.close()
             template.close()
             print("Creating new file for webpage")
